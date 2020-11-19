@@ -43,7 +43,7 @@ prio_ratio 是由 nice 值经标准化计算得出的比率，rr_interval 是由
 
 MuQSS 和 BFS 一样引入了两个新的调度策略：SCHED_ISO 和 SCHED_IDLEPRIO。 SCHED_ISO（等时调度，isochronous scheduling），允许非特权进程采用准实时的调度行为（注：用于交互进程）。设置为 SCHED_ISO 的任务会抢占 SCHED_NORMAL 任务，只要这个任务的步长为 5 秒的移动平均 CPU 使用率不超过 70％，这个阈值是可调的。另一方面，同时运行的多个 SCHED_ISO 任务之间采用轮转执行（round-robin）。如果一个 SCHED_ISO 任务的平均 CPU 使用率超过 70％ 阈值，它将暂时降级使用 SCHED_NORMAL 调度，直到经过足够的时间使其平均 CPU 使用率再次降至 70％ 以下。由于系统上每个 CPU 都有 70% 阈值，所以 SMP 架构的多核机器上完全可以使用任一可用的 CPU 来执行 SCHED_ISO 任务。例如，在双核机器上，执行一个 SCHED_ISO 任务最多只能消耗 CPU 总能力的 50%（注：两个 CPU 被占用一个）。
 
-SCHED_IDLEPRIO 与 SCHED_ISO 相反，它强制任务具有超低优先级。尽管它与主线调度程序中的 SCHED_IDLE 相似，但还是有细微的差别：即使同时有其他优先级更高的任务在运行，主线调度程序仍将最终运行 SCHED_IDLE 任务，但是 SCHED_IDLEPRIO 任务仅在绝对没有其他情况下运行 需要CPU的注意。 这对于清除空闲CPU（例如SETI @ Home）的批处理任务很有用。 为了避免死锁，如果 SCHED_IDLEPRIO 任务正在保存共享资源（例如互斥量或信号量），则即使队列中还有其他更高优先级的进程，该任务也会被临时提升回SCHED_NORMAL，以使其能够运行。
+与 SCHED_ISO 相反，SCHED_IDLEPRIO 任务具有超低优先级。它与主线调度程序中的 SCHED_IDLE 很相似，差别在于：由于主线调度器的多队列负载均衡有延迟时间，所以有可能当前 CPU 在运行 SCHED_IDLE 任务时，其他 CPU 中有就绪进程在等待，但是 SCHED_IDLEPRIO 任务仅在全局都没有就绪进程等待时运行。这对于希望利用每一个空闲 CPU 的批处理任务很有用，例如 SETI@Home。如果一个 SCHED_IDLEPRIO 任务持有共享资源（例如互斥量或信号量 mutex or semaphore），该任务会被临时提升回SCHED_NORMAL 调度运行，即便队列中还有其他更高优先级的进程在等待，这样做是为了避免死锁。
 
 下面三个可调参数可以控制调度器的行为：
 
