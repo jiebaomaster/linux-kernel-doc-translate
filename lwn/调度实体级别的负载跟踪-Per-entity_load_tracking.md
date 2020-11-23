@@ -1,7 +1,6 @@
 # 调度实体级别的负载跟踪
 
-> 原文链接 [Per-entity load tracking, by Jonathan Corbet
-January 9, 2013](https://lwn.net/Articles/531853/)
+> 原文链接 [Per-entity load tracking, by Jonathan Corbet，2013-1-9](https://lwn.net/Articles/531853/)
 
 Linux 内核的 CPU 调度程序需要满足以下需求：公平，响应迅速的方式给进程分配处理器，同时最大程度地提高系统吞吐量，并最小化功耗。用户期望上述结果，不管他们自己的工作负载的特征如何，也不管这些目标事实上经常相互冲突。因此，这些年来内核经历了几个不同的 CPU 调度器就不足为奇了。随着当前的“完全公平调度器”（CFS）在 2007 年的 2.6.23 版本上被合并，调度器似乎相对稳定了。然而，表面上的稳定之下，仍然发生了很多变化，在 3.8 版本中合并的 **Per-entity load tracking** 是这一段时间以来最重大的变化之一。
 

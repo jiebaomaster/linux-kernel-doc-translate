@@ -1,8 +1,8 @@
 # MuQSS 调度器
 
-> 原文链接 [MuQSS 调度器](https://lwn.net/Articles/720227/)，
+> 原文链接 [The MuQSS CPU scheduler](https://lwn.net/Articles/720227/)，by Nur Hussein，2017-4-20。
 > 配合以下两篇文章食用更佳：
-> [返璞归真的Linux BFS调度器](https://blog.csdn.net/dog250/article/details/7459533)，
+> [返璞归真的 Linux BFS 调度器](https://blog.csdn.net/dog250/article/details/7459533)，
 > [Linux 调度器 BFS 简介](https://www.ibm.com/developerworks/cn/linux/l-cn-bfs/index.html)
 
 因为调度算法对 Linux 桌面操作系统的整体响应性能有相当大的影响，所以桌面系统用户对调度器总是非常感兴趣。Con Kolivas 维护了一系列调度器补丁集，多年以来，他根据自己的使用情况对这些补丁集做了很多调整，主要为了减少调度延迟以优化桌面体验。2016 年 10 月初，Kolivas 更新了他广受欢迎的桌面调度器 BFS 的设计，并将其重命名为 MuQSS，新的设计是为了解决 BFS 在 CPU 数量不断增加时遇到的可伸缩性问题（scalability concerns）。
