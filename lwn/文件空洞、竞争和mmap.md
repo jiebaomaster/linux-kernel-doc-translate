@@ -1,5 +1,6 @@
-# File holes, races, and mmap()
-> [原文链接](https://lwn.net/Articles/357767/)
+# 文件空洞和mmap()系统调用
+
+> 原文链接 [File holes, races, and mmap()](https://lwn.net/Articles/357767/)，by Goldwyn Rodrigues，2009-10-21
 
 使用`truncate()`的文件操作一直都有竞争条件，开发人员一直关注文件写入与文件大小的竞争。存在各种极端情况，当错误发生时数据可能会丢失或被忽略，或者文件空洞预计为0时可能会出现意外数据。Jan Kara的[patch](http://lwn.net/Articles/353240/)尝试修复此类问题，它依赖于新的[truncate sequence](http://lwn.net/Articles/341352/)，该序列纠正了设置文件的inode大小的方式。
 
