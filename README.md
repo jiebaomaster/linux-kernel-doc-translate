@@ -17,3 +17,7 @@
 [MuQSS 调度器（The MuQSS CPU scheduler）](lwn/MuQSS_调度器-The_MuQSS_CPU_scheduler.md)
 
 [deadline调度器的容量感知(Capacity awareness for the deadline scheduler)](lwn/deadline调度器的容量感知.md)
+
+### 延迟
+
+[改善调度器延迟（Improving scheduler latency）](lwn/改善调度器延迟-Improving_scheduler_latency.md)
