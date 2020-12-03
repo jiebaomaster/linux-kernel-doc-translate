@@ -12,6 +12,12 @@
 
 [MuQSS 调度器（The MuQSS CPU scheduler）](lwn/MuQSS_调度器-The_MuQSS_CPU_scheduler.md)
 
+#### 电源管理
+
+[开发更加节能的调度器（Toward a more power-efficient scheduler）](lwn/开发更加节能的调度器.md)
+
+#### Deadline 调度器
+
 [deadline调度器的容量感知（Capacity awareness for the deadline scheduler）](lwn/deadline调度器的容量感知.md)
 
 #### 延迟
