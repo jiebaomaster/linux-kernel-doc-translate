@@ -20,6 +20,8 @@
 
 [开发更加节能的调度器（Toward a more power-efficient scheduler）](lwn/开发更加节能的调度器.md)
 
+[功率感知调度遇到了分界线（Power-aware scheduling meets a line in the sand）](lwn/功率感知调度遇到了分界线.md)
+
 #### Deadline 调度器
 
 [deadline调度器的容量感知（Capacity awareness for the deadline scheduler）](lwn/deadline调度器的容量感知.md)
