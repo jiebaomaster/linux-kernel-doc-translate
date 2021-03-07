@@ -9,11 +9,20 @@
 [文件空洞和mmap()系统调用（File holes, races, and mmap()）](lwn/文件空洞、竞争和mmap.md)
 
 ### 块设备层
+
 [基于页面的直接I/O（Page-based direct I/O）](lwn/基于页面的直接IO.md)
 
 ### 调度器
 
 [MuQSS 调度器（The MuQSS CPU scheduler）](lwn/MuQSS_调度器-The_MuQSS_CPU_scheduler.md)
+
+#### 电源管理
+
+[开发更加节能的调度器（Toward a more power-efficient scheduler）](lwn/开发更加节能的调度器.md)
+
+[功率感知调度遇到了分界线（Power-aware scheduling meets a line in the sand）](lwn/功率感知调度遇到了分界线.md)
+
+#### Deadline 调度器
 
 [deadline调度器的容量感知（Capacity awareness for the deadline scheduler）](lwn/deadline调度器的容量感知.md)
 
