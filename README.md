@@ -39,3 +39,7 @@
 #### 测试与基准
 
 [调度程序基准测试调查（A survey of scheduler benchmarks）](lwn/调度程序基准测试调查.md)
+
+### Ftrace
+
+[使用 Ftace 进行内核调试_第一部分（Debugging the kernel using Ftrace - part 1）](lwn/使用Ftrace进行内核调试_第一部分.md)
