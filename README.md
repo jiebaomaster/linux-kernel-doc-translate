@@ -8,6 +8,8 @@
 
 [文件空洞和mmap()系统调用（File holes, races, and mmap()）](lwn/文件空洞、竞争和mmap.md)
 
+[日志结构文件系统存在于每个 SSD 设备中（Log-structured file systems: There's one in every SSD）](lwn/日志结构文件系统存在于每个ssd设备中.md)
+
 ### 块设备层
 
 [基于页面的直接I/O（Page-based direct I/O）](lwn/基于页面的直接IO.md)
