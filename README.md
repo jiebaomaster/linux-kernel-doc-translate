@@ -43,3 +43,7 @@
 ### Ftrace
 
 [使用 Ftace 进行内核调试_第一部分（Debugging the kernel using Ftrace - part 1）](lwn/使用Ftrace进行内核调试_第一部分.md)
+
+### 其他
+
+[存储系列文章第5篇：程序员可以做什么（Memory part 5: What programmers can do）](lwn/what-every-programmer-should-know-about-memory/存储系列文章第5篇：程序员可以做什么.md)
