@@ -46,4 +46,8 @@
 
 ### 其他
 
-[存储系列文章第5篇：程序员可以做什么（Memory part 5: What programmers can do）](lwn/what-every-programmer-should-know-about-memory/存储系列文章第5篇：程序员可以做什么.md)
+[存储系列文章第5篇：程序员可以做什么（Memory part 5: What programmers can do）](paper/what-every-programmer-should-know-about-memory/存储系列文章第5篇：程序员可以做什么.md)
+
+[EPTI: 防御云端的 Meltdown 攻击](paper/EPTI/EPTI:Efﬁcient-Defence-against-Meltdown-Attack-for-Unpatched-VMs.md)
+
+[Meltdown](paper/EPTI/Meltdown:Reading-kernel-memory-from-user-space.md)
