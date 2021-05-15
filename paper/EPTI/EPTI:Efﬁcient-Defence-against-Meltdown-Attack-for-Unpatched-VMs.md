@@ -1,3 +1,5 @@
+> 原文链接：https://www.usenix.org/conference/atc18/presentation/hua
+
 **摘要**
 
 ​        Meltdown 漏洞利用了 x86、ARM 和 PowerPC 等常见处理器中固有的无序执行，打破了用户和内核空间之间的基本隔离边界。现代操作系统因为 Meltdown 漏洞更新了一个不小的补丁，用于将用户空间和内核空间页表分离，即 KPTI（kernel page table isolation）。虽然这个补丁阻止了恶意用户进程的内核内存泄漏，但它要用户修补其内核（这通常需要重启），并且目前只在最新版本的 OS 内核上可以使用。此外，由于在内核态和用户态切换的时候要进行页表切换，它还引入了不小的性能开销。
@@ -42,7 +44,7 @@
 
 ​        KPTI (内核页表隔离)基于 KAISER(内核地址隔离，有效地删除侧通道)，该方法是为了防御 Meltdown 攻击而提出的。这个补丁将用户空间和内核空间页表完全分离，如图 1 所示。
 
-<img src="/Users/li/Library/Application Support/typora-user-images/image-20210510193017585.png" alt="image-20210510193017585" style="zoom:50%;" />
+![Figure 1: Page table isolation. For a VM, KPTI uses two gPTs and one EPT, while EPTI uses one gPT (since VM is not patched) and two EPTs.](./pic/image-20210510193017585.png)
 
 内核使用的映射是和以前一样的，而应用程序使用的映射是包含一个用户空间的副本和一小组内核空间映射，仅使用 trampoline 代码进入内核。由于内核的数据不再映射到用户空间中，恶意应用程序无法直接解引用内核的数据地址，从而无法发动Meltdown攻击。KPTI 已经被合并到主流 Linux 内核 4.15 中，该内核于 2018 年 1 月 28 日发布。然而，该补丁在以前的 Linux 内核版本上仍然存在问题。例如，有报道称一些 Ubuntu 用户“刚刚得到内核 linux-image-4.4.0-108generic 的 Meltdown 更新，但这根本不能启动”。考虑到补丁需要由系统管理员手动应用，因此大多数机器可能需要很长时间才能部署补丁。
 
@@ -64,7 +66,7 @@
 
 ​        图 2 显示了在具有 4 级 gPT 和 EPT 的 x86-64 机器上从 GVA 到 HPA 的转换过程。
 
-<img src="/Users/li/Library/Application Support/typora-user-images/image-20210510211321062.png" alt="image-20210510211321062" style="zoom:50%;" />
+![Figure 2: Process of translating GVA to HPA in an x86-64 guest VM. The gCR3 of CPU points to gPT and hCR3 points to EPT.](./pic/image-20210510211321062.png)
 
 guest CR3 的值和 gPT 内的地址是 GPAs，而 EPTP 的值和 EPT 内的地址是 HPAs。当 CPU 遍历 gPT 时，需要将所需 gPT 页的所有 GPA 通过 EPT 转换为 HPA。为了最小化页遍历期间的内存占用，处理器在虚拟化环境中有两种类型的 TLB:  EPT-TLB 和组合 TLB。EPT-TLB 用于加速 GPA 到 HPA 的翻译，而组合 tlb 存储 GVA 到 HPA 的翻译条目。
 
@@ -76,7 +78,7 @@ guest CR3 的值和 gPT 内的地址是 GPAs，而 EPTP 的值和 EPT 内的地�
 
 ​		**EPTP 切换 TLB 行为：**我们进一步测试了 EPTP 交换的 TLB 行为，并发现 CPU 如何在 TLB 中构造不同 EPTP 的地址映射。使用一个 EPT 执行的操作不会影响其他 EPT，表 1 显示了测试结果。在表中，“两个 EPT 的 TLB 都无效，然后填充 EPT-0 的 TLB ”，这意味着我们首先在 EPT-0 和 EPT-1 中都调用 invlpg 指令（用于刷新 TLB），然后访问 EPT-0 的目标内存。之后，我们再次在 EPT-0 和 EPT-1 中访问目标内存，并测试访问延迟。 结果意味着 EPT-0 被填充，而 EPT-1 没有被填充。我们还测试了在一个 EPT 中调用  flush TLB 操作（write CR3 和 invlpg）是否会影响另一个 EPT 的 TLB。我们发现它们都刷新了其他 EPT 的 TLB。
 
-<img src="/Users/li/Library/Application Support/typora-user-images/image-20210511131636943.png" alt="image-20210511131636943" style="zoom:50%;" />
+![Table 1: TLB behaviors of different EPTs during VMFUNC.](./pic/image-20210511131636943.png)
 
 # 3 系统概述
 
@@ -90,7 +92,7 @@ EPTI 有三个目标：
 
 ​        一种直观的方法是删除 EPTu 中客户机内核使用的页面的所有 HPA 映射，这样当用户进程运行时，就不会映射所有内核页面。但是，这个解决方案不能工作，因为通常 Linux 内核会将整个 GPA 映射到它的 GVA 空间，这被称为直接映射，如图 3 所示。
 
-<img src="/Users/li/Library/Application Support/typora-user-images/image-20210511132035155.png" alt="image-20210511132035155" style="zoom:50%;" />
+![Figure 3: The difference of mapping of EPT u and EPT k .](./pic/image-20210511132035155.png)
 
 这意味着我们必须从 EPT 中移除所有的 GPA 映射，这也将禁用用户进程的执行。
 
@@ -112,7 +114,7 @@ EPTI 有三个目标：
 
 ​        <u>我们通过置零 EPTu 中用于地址转换的 gPT 页</u>来消除用户模式下内核地址空间的所有 GVA-to-GPA 映射。如上图所示，要使 gPT 页归零，我们将其重新映射到 EPTu 中的一个新的归零物理页。在使用 48 位虚拟地址的 64 位 Linux 内核中，有 4 个页面级别(从 gL4 到 gL1)。由于每个进程有不同的 gL4 页面，为了最小化对 EPTu 的修改，我们只将用于内核地址转换的 gL3 页面调零( gPT 结构如图 5 所示)。
 
-<img src="/Users/li/Library/Application Support/typora-user-images/image-20210512131519700.png" alt="image-20210512131519700" style="zoom:50%;" />
+![Figure 5: gPT of Linux. The kernel gL3 entries are shared by different gPTs.](./pic/image-20210512131519700.png)
 
 ​        将 EPTu 中内核空间的 gL3 页面置零后，由于目标 GVA 未被映射，从用户模式访问内核内存会触发 guest 页面错误(虽然 Meltdown 攻击可以绕过权限检查，但无法访问未映射的页面)。由于内核运行在 EPTk 中，它永远不能填满 EPTu 中归零的 gL3 页面，攻击者的用户进程永远不能访问内核内存(甚至推测性地)。
 
@@ -136,7 +138,8 @@ EPTI 有三个目标：
 
 ​		**将 trampoline 映射为两个 EPT 中的可执行文件：**<u>在 EPTu 中，只有带有 trampoline 代码的一页会映射到内核空间中</u>。为了确保这一点，EPTI 将所有 gPT 页( gL4 除外)重新映射到新的 host 物理页，这用于转换 trampoline 的 GVA。然后这些页面的所有条目都设置为 0，除了用于映射 trampoline 的条目(如图 4 所示)。
 
-<img src="/Users/li/Library/Application Support/typora-user-images/image-20210512134616913.png" alt="image-20210512134616913" style="zoom:50%;" />
+
+![Figure 4: Contents of kernel space of EPT u , which includes trampoline code page, register saving page, and gPT for mapping these two pages.](./pic/image-20210512134616913.png)
 
 gust IDT 的条目和系统调用条目 MSR (IA32 LSTAR) 将被更改为指向 trampoline 代码。在 EPTk 中，EPTI 将 trampoline 代码插入到 guest 内核的直接映射区域的末尾，并重新写入 kernel 的二进制，将退出点更改为将控制传递给 trampoline 的 jmp 指令。
 
